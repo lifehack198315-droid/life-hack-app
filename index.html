@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Life Hack OS | Your Life, Upgraded</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ======================= APP WRAPPER ======================= -->
+  <div class="app">
+
+    <!-- ========= HEADER ========= -->
+    <header class="app-header">
+      <div class="app-title">
+        <span class="app-name">Life Hack OS</span>
+        <span class="app-subtitle">One app. Your entire life.</span>
+      </div>
+      <div class="app-user">
+        <div class="avatar-circle">J</div>
+        <div class="user-text">
+          <span class="greeting">Good Morning, Joseph</span>
+          <span class="streak">Streak: 6 days</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========= MAIN CONTENT (SCREENS) ========= -->
+    <main class="app-main">
+
+      <!-- ===== TODAY SCREEN ===== -->
+      <section class="screen screen-active" data-screen="today">
+        <!-- Daily Status Cards -->
+        <div class="card-row">
+          <article class="card">
+            <h2>Health · <span class="score">82</span> / 100</h2>
+            <p class="card-sub">Solid day. Let’s push a little harder.</p>
+            <div class="meter-group">
+              <div class="meter">
+                <span class="meter-label">Steps</span>
+                <div class="meter-bar">
+                  <div class="meter-fill" style="width: 70%"></div>
+                </div>
+                <span class="meter-value">8,420 / 10,000</span>
+              </div>
+              <div class="meter">
+                <span class="meter-label">Water</span>
+                <div class="meter-bar">
+                  <div class="meter-fill meter-fill-secondary" style="width: 60%"></div>
+                </div>
+                <span class="meter-value">5 / 8 glasses</span>
+              </div>
+              <div class="meter">
+                <span class="meter-label">Sleep</span>
+                <div class="meter-bar">
+                  <div class="meter-fill meter-fill-soft" style="width: 80%"></div>
+                </div>
+                <span class="meter-value">6.5 / 8 hrs</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2>Energy & Safety</h2>
+            <p class="card-sub">You’re currently <strong>outside</strong>.</p>
+            <div class="pill-row">
+              <span class="pill">UV 7 · High</span>
+              <span class="pill">88°F</span>
+              <span class="pill pill-warn">Hydrate now</span>
+            </div>
+            <p class="card-note">
+              You’ve been in strong sun for 22 minutes. Cool down inside for 10–15 minutes.
+            </p>
+          </article>
+
+          <article class="card">
+            <h2>Spending · This Week</h2>
+            <p class="card-sub">You’re $34 over last week’s pace.</p>
+            <div class="money-row">
+              <div>
+                <span class="money-label">Total spent</span>
+                <span class="money-value">$312</span>
+              </div>
+              <button class="btn-secondary small">View details</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+          <button class="chip">+ Log water</button>
+          <button class="chip">+ Log meal</button>
+          <button class="chip">Scan outfit</button>
+          <button class="chip">Add expense</button>
+          <button class="chip">Check weather</button>
+        </div>
+
+        <!-- Coach Message -->
+        <article class="card card-coach">
+          <h2>Coach Message</h2>
+          <p class="coach-quote">
+            This time next year they won’t recognize you.  
+            Drink water, move your body, and respect your money.
+          </p>
+          <button class="btn-primary full-width">Get today’s pep talk</button>
+        </article>
+
+        <!-- Today’s Plan -->
+        <article class="card">
+          <h2>Today’s Plan</h2>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-time">Morning</span>
+              <span class="timeline-text">10-min walk · Light stretch</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">Lunch</span>
+              <span class="timeline-text">Low-sodium meal · No soda</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">Afternoon</span>
+              <span class="timeline-text">2 glasses of water</span>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-time">Evening</span>
+              <span class="timeline-text">No sugar after 8pm</span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ===== HEALTH SCREEN ===== -->
+      <section class="screen" data-screen="health">
+        <h1 class="screen-title">Health</h1>
+
+        <!-- Tabs -->
+        <div class="tabs">
+          <button class="tab tab-active" data-tab="activity">Activity</button>
+          <button class="tab" data-tab="food">Food & Sugar</button>
+          <button class="tab" data-tab="hydration">Hydration</button>
+          <button class="tab" data-tab="conditions">Conditions</button>
+        </div>
+
+        <!-- Tab Content: Activity -->
+        <div class="tab-content tab-content-active" data-tab-content="activity">
+          <article class="card">
+            <h2>Movement Rings</h2>
+            <div class="rings">
+              <div class="ring">
+                <div class="ring-circle ring-walk"></div>
+                <span class="ring-label">Walk</span>
+                <span class="ring-value">4,200 steps</span>
+              </div>
+              <div class="ring">
+                <div class="ring-circle ring-jog"></div>
+                <span class="ring-label">Jog</span>
+                <span class="ring-value">1,100 steps</span>
+              </div>
+              <div class="ring">
+                <div class="ring-circle ring-run"></div>
+                <span class="ring-label">Run</span>
+                <span class="ring-value">900 steps</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2>Movement Summary</h2>
+            <div class="summary-row">
+              <div class="summary-block">
+                <span class="summary-label">Total steps</span>
+                <span class="summary-value">6,200</span>
+              </div>
+              <div class="summary-block">
+                <span class="summary-label">Calories burned</span>
+                <span class="summary-value">425</span>
+              </div>
+              <div class="summary-block">
+                <span class="summary-label">Time active</span>
+                <span class="summary-value">52 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="card card-coach">
+            <h2>Coach Note</h2>
+            <p class="coach-quote">
+              Nice mix of walking and jogging. Give me one more 5-minute push tonight.
+            </p>
+          </article>
+        </div>
+
+        <!-- Tab Content: Food & Sugar -->
+        <div class="tab-content" data-tab-content="food">
+          <article class="card">
+            <h2>Today’s Intake</h2>
+            <div class="meter">
+              <span class="meter-label">Sugar</span>
+              <div class="meter-bar">
+                <div class="meter-fill meter-fill-warn" style="width: 76%"></div>
+              </div>
+              <span class="meter-value">38g / 50g</span>
+            </div>
+            <div class="meter">
+              <span class="meter-label">Carbs</span>
+              <div class="meter-bar">
+                <div class="meter-fill" style="width: 72%"></div>
+              </div>
+              <span class="meter-value">145g / 200g</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2>Meals</h2>
+            <ul class="list">
+              <li>
+                <span class="list-title">Breakfast · 7:42 AM</span>
+                <span class="list-sub">Oatmeal, banana</span>
+              </li>
+              <li>
+                <span class="list-title">Lunch · 12:11 PM</span>
+                <span class="list-sub">Grilled chicken, rice</span>
+              </li>
+              <li>
+                <span class="list-title warn">Snack · 3:02 PM</span>
+                <span class="list-sub warn">Soda (32g sugar)</span>
+              </li>
+            </ul>
+          </article>
+
+          <article class="card card-coach">
+            <h2>AI Suggestion</h2>
+            <p class="coach-quote">
+              Swap soda for flavored water or tea this afternoon.  
+              Keeps sugar low but still gives you something to sip.
+            </p>
+            <button class="btn-secondary full-width">Ask AI for food swap</button>
+          </article>
+        </div>
+
+        <!-- Tab Content: Hydration -->
+        <div class="tab-content" data-tab-content="hydration">
+          <article class="card hydration-card">
+            <h2>Hydration</h2>
+            <div class="water-bottle">
+              <div class="water-fill" style="height: 62%"></div>
+            </div>
+            <p class="hydration-text">5 / 8 glasses</p>
+            <p class="hydration-note">
+              You’re 3 glasses short of your goal. Take one now.
+            </p>
+            <div class="hydration-actions">
+              <button class="btn-primary">Log 1 glass</button>
+              <button class="btn-secondary">Log custom</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Tab Content: Conditions -->
+        <div class="tab-content" data-tab-content="conditions">
+          <article class="card">
+            <h2>Conditions</h2>
+            <div class="pill-row">
+              <span class="pill pill-on">Kidney Support: ON</span>
+              <span class="pill pill-on">Weight Loss: ON</span>
+              <span class="pill">Diabetes: OFF</span>
+            </div>
+          </article>
+
+          <article class="card">
+            <h2>Today’s Red Flags</h2>
+            <ul class="list">
+              <li>
+                <span class="list-title warn">High-sodium meal logged</span>
+                <span class="list-sub">Watch canned and processed foods.</span>
+              </li>
+              <li>
+                <span class="list-title">Water on track</span>
+                <span class="list-sub">Great job staying hydrated.</span>
+              </li>
+            </ul>
+          </article>
+
+          <article class="card card-coach">
+            <h2>AI Tips</h2>
+            <p class="coach-quote">
+              Try a baked, lightly seasoned protein next meal.  
+              Avoid canned soups and salty deli meats today.
+            </p>
+            <button class="btn-secondary full-width">View recommended foods</button>
+          </article>
+        </div>
+      </section>
+
+      <!-- ===== STYLE SCREEN ===== -->
+      <section class="screen" data-screen="style">
+        <h1 class="screen-title">Style</h1>
+
+        <article class="card">
+          <h2>Today’s Weather</h2>
+          <p class="card-sub">62°F · Partly cloudy · UV 5</p>
+          <div class="pill-row">
+            <span class="pill">Light jacket</span>
+            <span class="pill">Dry</span>
+            <span class="pill">Mild breeze</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Today’s Fit</h2>
+          <p class="card-sub">Smart casual · Weather-ready</p>
+          <ul class="list">
+            <li>
+              <span class="list-title">Navy jacket</span>
+              <span class="list-sub">Clean, sharp outer layer</span>
+            </li>
+            <li>
+              <span class="list-title">Sky blue pinstripe shirt</span>
+              <span class="list-sub">Contrast with jacket, brightens face</span>
+            </li>
+            <li>
+              <span class="list-title">Dark jeans</span>
+              <span class="list-sub">Balanced and timeless</span>
+            </li>
+            <li>
+              <span class="list-title">White sneakers</span>
+              <span class="list-sub">Keeps the look modern</span>
+            </li>
+          </ul>
+          <button class="btn-secondary full-width">See alternatives</button>
+        </article>
+
+        <article class="card">
+          <h2>Dress For…</h2>
+          <div class="quick-actions">
+            <button class="chip chip-active">Work</button>
+            <button class="chip">Gym</button>
+            <button class="chip">Casual</button>
+            <button class="chip">Date</button>
+            <button class="chip">Event</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Your Closet</h2>
+          <div class="summary-row">
+            <div class="summary-block">
+              <span class="summary-label">Tops</span>
+              <span class="summary-value">24</span>
+            </div>
+            <div class="summary-block">
+              <span class="summary-label">Bottoms</span>
+              <span class="summary-value">15</span>
+            </div>
+            <div class="summary-block">
+              <span class="summary-label">Shoes</span>
+              <span class="summary-value">7</span>
+            </div>
+            <div class="summary-block">
+              <span class="summary-label">Jackets</span>
+              <span class="summary-value">5</span>
+            </div>
+          </div>
+          <button class="btn-primary full-width">Scan new item</button>
+        </article>
+      </section>
+
+      <!-- ===== MONEY SCREEN ===== -->
+      <section class="screen" data-screen="money">
+        <h1 class="screen-title">Money</h1>
+
+        <article class="card">
+          <h2>This Week</h2>
+          <p class="card-sub">Control your week. Don’t guess.</p>
+          <div class="money-summary">
+            <div>
+              <span class="money-label">Spent</span>
+              <span class="money-value">$312</span>
+            </div>
+            <div>
+              <span class="money-label">vs last week</span>
+              <span class="money-diff money-diff-bad">+ $34</span>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>By Category</h2>
+          <ul class="list">
+            <li>
+              <span class="list-title">Groceries</span>
+              <span class="list-sub">$112</span>
+            </li>
+            <li>
+              <span class="list-title">Eating out</span>
+              <span class="list-sub">$86</span>
+            </li>
+            <li>
+              <span class="list-title">Gas / transport</span>
+              <span class="list-sub">$54</span>
+            </li>
+            <li>
+              <span class="list-title">Subscriptions</span>
+              <span class="list-sub">$40</span>
+            </li>
+            <li>
+              <span class="list-title">Other</span>
+              <span class="list-sub">$20</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card card-coach">
+          <h2>Alert</h2>
+          <p class="coach-quote">
+            You’re on track to overspend on eating out.  
+            Make tonight a stay-at-home meal and save ~$20.
+          </p>
+          <div class="hydration-actions">
+            <button class="btn-primary">Plan cheap meal</button>
+            <button class="btn-secondary">Ignore</button>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Quick Add</h2>
+          <div class="quick-actions">
+            <button class="chip">+ Grocery</button>
+            <button class="chip">+ Gas</button>
+            <button class="chip">+ Bill</button>
+            <button class="chip">+ Other</button>
+          </div>
+        </article>
+      </section>
+
+      <!-- ===== YOU SCREEN ===== -->
+      <section class="screen" data-screen="you">
+        <h1 class="screen-title">You</h1>
+
+        <article class="card profile-card">
+          <div class="avatar-circle avatar-large">J</div>
+          <div class="profile-text">
+            <span class="profile-name">Joseph Stayton</span>
+            <span class="profile-tagline">One app. Whole life upgrade.</span>
+            <span class="streak">Streak: 6 days</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Goals</h2>
+          <ul class="list">
+            <li>
+              <span class="list-title">10,000 steps / day</span>
+              <span class="list-sub">Health goal</span>
+            </li>
+            <li>
+              <span class="list-title">Spend &lt; $250 / week</span>
+              <span class="list-sub">Money goal</span>
+            </li>
+            <li>
+              <span class="list-title">8 glasses water / day</span>
+              <span class="list-sub">Hydration goal</span>
+            </li>
+          </ul>
+        </article>
+
+        <article class="card">
+          <h2>Health Modes</h2>
+          <div class="pill-row">
+            <span class="pill pill-on">Kidney Support: ON</span>
+            <span class="pill pill-on">Weight Loss: ON</span>
+            <span class="pill">Diabetes: OFF</span>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2>Settings</h2>
+          <ul class="list">
+            <li>
+              <span class="list-title">Notifications</span>
+              <span class="list-sub">Standard</span>
+            </li>
+            <li>
+              <span class="list-title">Theme</span>
+              <span class="list-sub">Dark</span>
+            </li>
+            <li>
+              <span class="list-title">Data connections</span>
+              <span class="list-sub">Apple Health, bank links</span>
+            </li>
+            <li>
+              <span class="list-title">Privacy & exports</span>
+              <span class="list-sub">Download your data</span>
+            </li>
+          </ul>
+        </article>
+      </section>
+
+    </main>
+
+    <!-- ========= BOTTOM NAV ========= -->
+    <nav class="bottom-nav">
+      <button class="nav-item nav-item-active" data-screen-target="today">
+        <span class="nav-label">Today</span>
+      </button>
+      <button class="nav-item" data-screen-target="health">
+        <span class="nav-label">Health</span>
+      </button>
+      <button class="nav-item" data-screen-target="style">
+        <span class="nav-label">Style</span>
+      </button>
+      <button class="nav-item" data-screen-target="money">
+        <span class="nav-label">Money</span>
+      </button>
+      <button class="nav-item" data-screen-target="you">
+        <span class="nav-label">You</span>
+      </button>
+    </nav>
+
+    <!-- ========= ASK AI FLOATING BUTTON ========= -->
+    <button class="ask-ai-btn" id="askAiBtn">
+      Ask AI
+    </button>
+
+    <!-- ========= ASK AI PANEL ========= -->
+    <section class="ask-ai-panel" id="askAiPanel">
+      <div class="ask-ai-header">
+        <span class="ask-ai-title">Ask AI</span>
+        <button class="ask-ai-close" id="askAiClose">×</button>
+      </div>
+
+      <div class="ask-ai-tone">
+        <span>Tone:</span>
+        <button class="tone-btn tone-active">Coach</button>
+        <button class="tone-btn">Gentle</button>
+      </div>
+
+      <div class="ask-ai-messages">
+        <div class="msg msg-ai">
+          <p>
+            I’m your life coach in your pocket.  
+            Ask me anything about your health, habits, money, style, or day.
+          </p>
+        </div>
+        <div class="msg msg-user">
+          <p>What should I eat today with my kidney issues and my budget?</p>
+        </div>
+        <div class="msg msg-ai">
+          <p>
+            Alright, listen. We’re keeping sodium low and money in your pocket.
+            Here’s a simple plan:
+          </p>
+          <ul>
+            <li>Breakfast: Oatmeal + berries</li>
+            <li>Lunch: Grilled chicken + steamed veggies (no heavy sauces)</li>
+            <li>Dinner: Rice + beans + side salad</li>
+          </ul>
+          <p>Drink water with every meal. No sugary drinks today. You can handle that.</p>
+        </div>
+      </div>
+
+      <div class="ask-ai-input-row">
+        <input
+          type="text"
+          class="ask-ai-input"
+          placeholder="Ask anything about your health, habits, money, style..."
+        />
+        <button class="ask-ai-send">▶</button>
+      </div>
+      <p class="ask-ai-footer">3 free questions left · Upgrade for unlimited</p>
+    </section>
+
+  </div>
+
+  <!-- ========= BASIC INTERACTION SCRIPT ========= -->
+  <script>
+    // Bottom nav switching
+    const screens = document.querySelectorAll('.screen');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    navItems.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.getAttribute('data-screen-target');
+
+        screens.forEach(s => {
+          s.classList.toggle('screen-active', s.dataset.screen === target);
+        });
+
+        navItems.forEach(n => n.classList.remove('nav-item-active'));
+        btn.classList.add('nav-item-active');
+      });
+    });
+
+    // Tabs on Health screen
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+
+        tabs.forEach(t => t.classList.remove('tab-active'));
+        tab.classList.add('tab-active');
+
+        tabContents.forEach(content => {
+          content.classList.toggle(
+            'tab-content-active',
+            content.getAttribute('data-tab-content') === target
+          );
+        });
+      });
+    });
+
+    // Ask AI panel
+    const askAiBtn = document.getElementById('askAiBtn');
+    const askAiPanel = document.getElementById('askAiPanel');
+    const askAiClose = document.getElementById('askAiClose');
+
+    askAiBtn.addEventListener('click', () => {
+      askAiPanel.classList.add('ask-ai-open');
+    });
+
+    askAiClose.addEventListener('click', () => {
+      askAiPanel.classList.remove('ask-ai-open');
+    });
+  </script>
+</body>
+</html>
