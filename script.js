@@ -125,15 +125,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
   updateFreeQuestionsFooter();
 
-  function buildCoachReply(question) {
+   function buildCoachReply(question) {
     const q = (question || "").toLowerCase();
 
+    // If kidney mode is on, we bias almost EVERYTHING toward kidney protection
+    if (kidneyModeOn) {
+      if (q.includes("eat") || q.includes("food") || q.includes("diet")) {
+        return "Kidney-first plan: low sodium, simple ingredients. Think baked or grilled protein, steamed or frozen veggies without heavy sauce, and rice/beans with light seasoning. Avoid canned soups, instant noodles, and salty snacks. Always run big changes past your kidney doctor.";
+      }
+
+      if (q.includes("water") || q.includes("drink") || q.includes("hydration")) {
+        return "Hydration matters, but the exact amount depends on your kidneys and heart. Follow the daily fluid limit your doctor gave you. Use this app to stay close to that number—not to randomly chug water.";
+      }
+
+      if (q.includes("sodium") || q.includes("salt")) {
+        return "Your kidneys LOVE low-sodium days. Keep most meals under heavy salt. Choose fresh or frozen over canned, skip the extra soy sauce and seasoning packets, and taste your food before you reach for the salt shaker.";
+      }
+    }
+
+    // Kidney-specific question even if not explicit “mode”
     if (q.includes("kidney")) {
-      return "Kidney mode ON: low sodium, high water. Think baked or grilled protein, steamed veggies, and avoid canned or super salty foods. Keep it simple and cheap: rice, beans, frozen veggies, and water.";
+      return "Kidney mode ON: low sodium, controlled fluids, movement, and careful with meds. You win by being boring and consistent. Build a cheap rotation: rice/beans, grilled or baked chicken, steamed veggies, and water or unsweet tea. Confirm details with your kidney doctor or dietitian.";
     }
 
     if (q.includes("money") || q.includes("spend") || q.includes("broke") || q.includes("budget")) {
-      return "Money talk: for the next 7 days, track EVERY dollar. No guessing. Once you see where it goes, we cut one expensive habit and move that money to bills or savings.";
+      return "Money talk: for the next 7 days, track EVERY dollar. No guessing. Once you see where it goes, we cut one expensive habit and move that money to bills, meds, or savings.";
     }
 
     if (q.includes("weight") || q.includes("fat") || q.includes("lose")) {
@@ -141,23 +157,23 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (q.includes("style") || q.includes("clothes") || q.includes("outfit")) {
-      return "Style rule: clean, fitted, and simple beats loud and sloppy every time. Dark pants, clean sneakers, and a sharp top/jacket will carry you almost anywhere.";
+      return "Style rule: clean, fitted, and simple beats loud and sloppy. Dark pants, clean sneakers, sharp jacket or top. You’ll look like you have your life together even on off days.";
     }
 
     if (q.includes("tired") || q.includes("sleep")) {
-      return "Sleep is your cheat code. Tonight, pick a shutdown time and stick to it. 30 minutes before that: no phone, no scrolling. Just slow your brain down.";
+      return "Sleep is kidney-support too. Better rest helps blood pressure and sugar control. Pick a shutdown time tonight and honor it like a contract.";
     }
 
     if (q.includes("motivation") || q.includes("lazy") || q.includes("stuck")) {
-      return "Motivation comes AFTER action. Set a timer for 10 minutes and do one small task. When the timer ends, you’re allowed to stop—but most of the time you’ll keep going.";
+      return "Motivation comes AFTER action. Set a 10-minute timer and do one small task—walk, drink water, prep a low-sodium meal, or pay a bill. When the timer ends, you’re allowed to stop. Most days, you won’t.";
     }
 
     // Default based on tone
     if (currentTone === "gentle") {
-      return "Take a breath. You don’t have to fix everything today. Pick one tiny win for the next hour—water, a short walk, or paying one bill—and give yourself credit when you do it.";
+      return "Take a breath. You don’t have to fix everything today. Pick one small kidney-safe move: drink within your fluid limit, pick a low-sodium meal, or take a short walk. Then give yourself credit for it.";
     }
 
-    return "You already know the next right step. Your job is to DO it, not overthink it. Write down one action you’ll take in the next 30 minutes, then do it before you open social media again.";
+    return "You already know the next right step. Your job is to DO it, not overthink it. Make one kidney-safe decision in the next 30 minutes—less salt, better meal, small walk—before you open social media again.";
   }
 
   function appendMessage(text, from = "ai") {
