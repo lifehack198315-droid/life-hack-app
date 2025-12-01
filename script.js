@@ -1,5 +1,24 @@
-// Life Hack OS – UI Wiring
-// This connects your beautiful UI to real behavior.
+// Life Hack OS – UI Wiring (UPGRADED with persistence)
+
+// Helpers to safely use localStorage
+function loadNumber(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+    if (value === null) return fallback;
+    const num = Number(value);
+    return Number.isNaN(num) ? fallback : num;
+  } catch (e) {
+    return fallback;
+  }
+}
+
+function saveNumber(key, value) {
+  try {
+    localStorage.setItem(key, String(value));
+  } catch (e) {
+    // ignore if storage not available
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
   // ================== BOTTOM NAV: SCREEN SWITCHING ==================
@@ -52,25 +71,59 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================== ASK AI – TONE TOGGLE ==================
-  let currentTone = "coach";
+  // ================== ASK AI – TONE TOGGLE (PERSISTENT) ==================
+  let currentTone = (function () {
+    try {
+      return localStorage.getItem("lh_currentTone") || "coach";
+    } catch (e) {
+      return "coach";
+    }
+  })();
+
   const toneButtons = document.querySelectorAll(".tone-btn");
+
+  // Initial tone button state
+  toneButtons.forEach((btn) => {
+    const tone = btn.getAttribute("data-tone") || "coach";
+    if (tone === currentTone) {
+      btn.classList.add("tone-active");
+    } else {
+      btn.classList.remove("tone-active");
+    }
+  });
 
   toneButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       toneButtons.forEach((b) => b.classList.remove("tone-active"));
       btn.classList.add("tone-active");
       currentTone = btn.getAttribute("data-tone") || "coach";
+      try {
+        localStorage.setItem("lh_currentTone", currentTone);
+      } catch (e) {
+        // ignore
+      }
     });
   });
 
-  // ================== ASK AI – SIMPLE BRAIN ==================
+  // ================== ASK AI – SIMPLE BRAIN + FREE QUESTION COUNTER ==================
   const messagesContainer = document.getElementById("askAiMessages");
   const askAiInput = document.getElementById("askAiInput");
   const askAiSend = document.getElementById("askAiSend");
   const askAiFooter = document.getElementById("askAiFooter");
 
-  let freeQuestions = 3;
+  let freeQuestions = loadNumber("lh_freeQuestions", 3);
+
+  function updateFreeQuestionsFooter() {
+    if (!askAiFooter) return;
+    if (freeQuestions > 0) {
+      askAiFooter.textContent = `${freeQuestions} free questions left · Upgrade for unlimited`;
+    } else {
+      askAiFooter.textContent =
+        "Free questions used · Upgrade for unlimited coaching (future feature).";
+    }
+  }
+
+  updateFreeQuestionsFooter();
 
   function buildCoachReply(question) {
     const q = (question || "").toLowerCase();
@@ -122,7 +175,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!question) return;
 
     if (freeQuestions <= 0) {
-      appendMessage("Free limit hit. Imagine this is where the upgrade paywall kicks in. For now, reset your brain by taking one small action from our last answer.", "ai");
+      appendMessage(
+        "Free limit hit. Imagine this is where the upgrade paywall kicks in. For now, reset your brain by taking one small action from our last answer.",
+        "ai"
+      );
       return;
     }
 
@@ -131,13 +187,8 @@ document.addEventListener("DOMContentLoaded", () => {
     appendMessage(reply, "ai");
 
     freeQuestions -= 1;
-    if (askAiFooter) {
-      if (freeQuestions > 0) {
-        askAiFooter.textContent = `${freeQuestions} free questions left · Upgrade for unlimited`;
-      } else {
-        askAiFooter.textContent = "Free questions used · Upgrade for unlimited coaching (future feature).";
-      }
-    }
+    saveNumber("lh_freeQuestions", freeQuestions);
+    updateFreeQuestionsFooter();
 
     askAiInput.value = "";
   }
@@ -152,7 +203,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ================== HYDRATION LOGIC ==================
+  // ================== HYDRATION LOGIC (PERSISTENT) ==================
   const hydrationText = document.getElementById("hydrationText");
   const hydrationFill = document.getElementById("hydrationFill");
   const hydrationNote = document.getElementById("hydrationNote");
@@ -160,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const btnLogGlass = document.getElementById("btnLogGlass");
   const btnLogCustom = document.getElementById("btnLogCustom");
 
-  let waterCurrent = 5;
+  let waterCurrent = loadNumber("lh_waterCurrent", 5);
   const waterGoal = 8;
 
   function updateHydrationUI() {
@@ -182,6 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         hydrationNote.textContent = "Hydration goal hit. Maintain it and your energy will thank you.";
       }
     }
+    saveNumber("lh_waterCurrent", waterCurrent);
   }
 
   updateHydrationUI();
@@ -207,7 +259,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // Quick action on Today: "+ Log water"
+  // Quick action on Today: "+ Log water" etc.
   const todayQuickActions = document.querySelectorAll(".quick-actions-today .chip");
   todayQuickActions.forEach((chip) => {
     chip.addEventListener("click", () => {
@@ -225,13 +277,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ================== MONEY – QUICK ADD ==================
+  // ================== MONEY – QUICK ADD (PERSISTENT) ==================
   const moneySpentEl = document.getElementById("moneySpent");
   const moneyDiffEl = document.getElementById("moneyDiff");
   const moneyQuickChips = document.querySelectorAll(".quick-actions-money .chip");
 
-  let moneySpent = 312;
-  let moneyVsLastWeek = 34;
+  let moneySpent = loadNumber("lh_moneySpent", 312);
+  let moneyVsLastWeek = loadNumber("lh_moneyVsLastWeek", 34);
 
   function updateMoneyUI() {
     if (moneySpentEl) {
@@ -240,6 +292,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (moneyDiffEl) {
       moneyDiffEl.textContent = `+ $${moneyVsLastWeek.toFixed(0)}`;
     }
+    saveNumber("lh_moneySpent", moneySpent);
+    saveNumber("lh_moneyVsLastWeek", moneyVsLastWeek);
   }
 
   updateMoneyUI();
@@ -263,7 +317,7 @@ document.addEventListener("DOMContentLoaded", () => {
     "Drink water, move 10 minutes, and spend with intention. Those three alone will change your whole life.",
     "You’ve survived every bad day so far. Now it’s time to build days you actually enjoy living.",
     "You’re not behind—you’re just starting your serious chapter. Act like it.",
-    "No more ‘all or nothing’. Today is ‘something or nothing’. Choose something.",
+    "No more ‘all or nothing’. Today is ‘something or nothing’. Choose something."
   ];
 
   if (btnPepTalk && coachQuote) {
@@ -273,5 +327,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  console.log("Life Hack OS wiring script loaded.");
+  console.log("Life Hack OS wiring script (UPGRADED) loaded.");
 });
