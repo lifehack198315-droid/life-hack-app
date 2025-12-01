@@ -48,7 +48,7 @@
                 <div class="meter-bar">
                   <div class="meter-fill meter-fill-secondary" style="width: 60%"></div>
                 </div>
-                <span class="meter-value">5 / 8 glasses</span>
+                <span class="meter-value" id="todayWaterText">5 / 8 glasses</span>
               </div>
               <div class="meter">
                 <span class="meter-label">Sleep</span>
@@ -87,7 +87,7 @@
         </div>
 
         <!-- Quick Actions -->
-        <div class="quick-actions">
+        <div class="quick-actions quick-actions-today">
           <button class="chip">+ Log water</button>
           <button class="chip">+ Log meal</button>
           <button class="chip">Scan outfit</button>
@@ -98,11 +98,11 @@
         <!-- Coach Message -->
         <article class="card card-coach">
           <h2>Coach Message</h2>
-          <p class="coach-quote">
+          <p class="coach-quote" id="coachQuote">
             This time next year they won’t recognize you.  
             Drink water, move your body, and respect your money.
           </p>
-          <button class="btn-primary full-width">Get today’s pep talk</button>
+          <button class="btn-primary full-width" id="btnPepTalk">Get today’s pep talk</button>
         </article>
 
         <!-- Today’s Plan -->
@@ -243,15 +243,15 @@
           <article class="card hydration-card">
             <h2>Hydration</h2>
             <div class="water-bottle">
-              <div class="water-fill" style="height: 62%"></div>
+              <div class="water-fill" id="hydrationFill" style="height: 62%"></div>
             </div>
-            <p class="hydration-text">5 / 8 glasses</p>
-            <p class="hydration-note">
+            <p class="hydration-text" id="hydrationText">5 / 8 glasses</p>
+            <p class="hydration-note" id="hydrationNote">
               You’re 3 glasses short of your goal. Take one now.
             </p>
             <div class="hydration-actions">
-              <button class="btn-primary">Log 1 glass</button>
-              <button class="btn-secondary">Log custom</button>
+              <button class="btn-primary" id="btnLogGlass">Log 1 glass</button>
+              <button class="btn-secondary" id="btnLogCustom">Log custom</button>
             </div>
           </article>
         </div>
@@ -375,11 +375,11 @@
           <div class="money-summary">
             <div>
               <span class="money-label">Spent</span>
-              <span class="money-value">$312</span>
+              <span class="money-value" id="moneySpent">$312</span>
             </div>
             <div>
               <span class="money-label">vs last week</span>
-              <span class="money-diff money-diff-bad">+ $34</span>
+              <span class="money-diff money-diff-bad" id="moneyDiff">+ $34</span>
             </div>
           </div>
         </article>
@@ -424,11 +424,11 @@
 
         <article class="card">
           <h2>Quick Add</h2>
-          <div class="quick-actions">
-            <button class="chip">+ Grocery</button>
-            <button class="chip">+ Gas</button>
-            <button class="chip">+ Bill</button>
-            <button class="chip">+ Other</button>
+          <div class="quick-actions quick-actions-money">
+            <button class="chip" data-amount="20">+ Grocery</button>
+            <button class="chip" data-amount="40">+ Gas</button>
+            <button class="chip" data-amount="60">+ Bill</button>
+            <button class="chip" data-amount="15">+ Other</button>
           </div>
         </article>
       </section>
@@ -531,11 +531,11 @@
 
       <div class="ask-ai-tone">
         <span>Tone:</span>
-        <button class="tone-btn tone-active">Coach</button>
-        <button class="tone-btn">Gentle</button>
+        <button class="tone-btn tone-active" data-tone="coach">Coach</button>
+        <button class="tone-btn" data-tone="gentle">Gentle</button>
       </div>
 
-      <div class="ask-ai-messages">
+      <div class="ask-ai-messages" id="askAiMessages">
         <div class="msg msg-ai">
           <p>
             I’m your life coach in your pocket.  
@@ -563,66 +563,18 @@
         <input
           type="text"
           class="ask-ai-input"
+          id="askAiInput"
           placeholder="Ask anything about your health, habits, money, style..."
         />
-        <button class="ask-ai-send">▶</button>
+        <button class="ask-ai-send" id="askAiSend">▶</button>
       </div>
-      <p class="ask-ai-footer">3 free questions left · Upgrade for unlimited</p>
+      <p class="ask-ai-footer" id="askAiFooter">3 free questions left · Upgrade for unlimited</p>
     </section>
 
   </div>
 
-  <!-- ========= BASIC INTERACTION SCRIPT ========= -->
-  <script>
-    // Bottom nav switching
-    const screens = document.querySelectorAll('.screen');
-    const navItems = document.querySelectorAll('.nav-item');
-
-    navItems.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const target = btn.getAttribute('data-screen-target');
-
-        screens.forEach(s => {
-          s.classList.toggle('screen-active', s.dataset.screen === target);
-        });
-
-        navItems.forEach(n => n.classList.remove('nav-item-active'));
-        btn.classList.add('nav-item-active');
-      });
-    });
-
-    // Tabs on Health screen
-    const tabs = document.querySelectorAll('.tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.getAttribute('data-tab');
-
-        tabs.forEach(t => t.classList.remove('tab-active'));
-        tab.classList.add('tab-active');
-
-        tabContents.forEach(content => {
-          content.classList.toggle(
-            'tab-content-active',
-            content.getAttribute('data-tab-content') === target
-          );
-        });
-      });
-    });
-
-    // Ask AI panel
-    const askAiBtn = document.getElementById('askAiBtn');
-    const askAiPanel = document.getElementById('askAiPanel');
-    const askAiClose = document.getElementById('askAiClose');
-
-    askAiBtn.addEventListener('click', () => {
-      askAiPanel.classList.add('ask-ai-open');
-    });
-
-    askAiClose.addEventListener('click', () => {
-      askAiPanel.classList.remove('ask-ai-open');
-    });
+  <!-- ========= EXTERNAL SCRIPT ========= -->
   <script src="script.js"></script>
 </body>
 </html>
+
