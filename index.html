@@ -26,6 +26,63 @@
     </header>
 
     <!-- ========= MAIN CONTENT (SCREENS) ========= -->
+    <!-- ===== WATER LOG SCREEN ===== -->
+<section class="screen" data-screen="waterLog">
+  <h1 class="screen-title">Log Water</h1>
+
+  <article class="card hydration-card">
+    <h2>Add Water Intake</h2>
+    <div class="water-bottle">
+      <div class="water-fill" id="waterLogFill"></div>
+    </div>
+    <p id="waterLogText">Today: 0 glasses</p>
+
+    <div class="hydration-actions">
+      <button class="btn-primary" id="waterLogAddGlass">+ 1 Glass</button>
+      <button class="btn-secondary" id="waterLogAddCustom">+ Custom Amount</button>
+    </div>
+  </article>
+</section>
+
+<!-- ===== ADD EXPENSE SCREEN ===== -->
+<section class="screen" data-screen="addExpense">
+  <h1 class="screen-title">Add Expense</h1>
+
+  <article class="card">
+    <h2>New Expense</h2>
+
+    <label class="input-label">Description</label>
+    <input type="text" class="input-box" id="expenseDesc" placeholder="e.g. Gas, Groceries, Eating out" />
+
+    <label class="input-label">Amount</label>
+    <input type="number" class="input-box" id="expenseAmount" placeholder="e.g. 27.50" />
+
+    <label class="input-label">Category</label>
+    <select class="input-box" id="expenseCategory">
+      <option>Groceries</option>
+      <option>Eating out</option>
+      <option>Gas</option>
+      <option>Bills</option>
+      <option>Other</option>
+    </select>
+
+    <button class="btn-primary full-width" id="saveExpense">Save Expense</button>
+  </article>
+</section>
+
+<!-- ===== WEEKLY WEATHER SCREEN ===== -->
+<section class="screen" data-screen="weatherWeek">
+  <h1 class="screen-title">Weekly Weather</h1>
+
+  <article class="card">
+    <h2>Extended Forecast</h2>
+
+    <ul class="list" id="weatherList">
+      <!-- JS will insert the daily forecast -->
+    </ul>
+  </article>
+</section>
+
     <main class="app-main">
 
       <!-- ===== TODAY SCREEN ===== -->
