@@ -341,6 +341,28 @@ document.addEventListener("DOMContentLoaded", () => {
       const random = pepTalks[Math.floor(Math.random() * pepTalks.length)];
       coachQuote.textContent = random;
     });
+    // --- CARD CLICK HANDLERS ---
+document.getElementById("card-water")?.addEventListener("click", () => {
+  openScreen("water-screen");
+});
+
+document.getElementById("card-meal")?.addEventListener("click", () => {
+  openScreen("meal-screen");
+});
+
+document.getElementById("card-receipt")?.addEventListener("click", () => {
+  openScreen("receipt-screen");
+});
+
+document.getElementById("card-weather")?.addEventListener("click", () => {
+  openScreen("weather-screen");
+});
+
+// ---- SIMPLE SCREEN SWITCHER ----
+function openScreen(screenId) {
+  document.querySelectorAll(".screen").forEach((scr) => scr.classList.add("hidden"));
+  document.getElementById(screenId).classList.remove("hidden");
+}
   }
 
   console.log("Life Hack OS wiring script (UPGRADED) loaded.");
