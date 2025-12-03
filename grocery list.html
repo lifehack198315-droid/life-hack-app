@@ -13,4 +13,48 @@
     <button class="btn-primary full-width" id="startScanner">Start Scanner</button>
     <button class="btn-secondary full-width" id="stopScanner">Stop Scanner</button>
   </article>
-</section>
+</section><div class="grocery-app">
+  <h1 class="grocery-title">Grocery List</h1>
+
+  <div class="grocery-card">
+    <div class="grocery-input-row">
+      <input id="itemName" class="g-input" placeholder="Item name (eggs, milk...)" />
+      <input id="itemQty" class="g-input g-input-small" type="number" min="1" placeholder="Qty" />
+    </div>
+
+    <div class="grocery-input-row">
+      <select id="itemCategory" class="g-input">
+        <option value="">Category (optional)</option>
+        <option>Produce</option>
+        <option>Dairy</option>
+        <option>Meat</option>
+        <option>Frozen</option>
+        <option>Pantry</option>
+        <option>Snacks</option>
+        <option>Other</option>
+      </select>
+    </div>
+
+    <div class="grocery-actions">
+      <button id="btnAddItem" class="g-btn g-btn-primary">Add item</button>
+      <button id="btnClearList" class="g-btn g-btn-ghost">Clear list</button>
+    </div>
+  </div>
+
+  <div class="grocery-card">
+    <h2 class="g-section-title">Your List</h2>
+    <ul id="groceryList" class="g-list"></ul>
+  </div>
+
+  <!-- OPTIONAL UPC SCANNER -->
+  <div class="grocery-card">
+    <h2 class="g-section-title">Scan UPC (Optional)</h2>
+    <video id="barcodeVideo" class="g-video" playsinline></video>
+    <div class="grocery-actions">
+      <button id="startScanner" class="g-btn g-btn-primary">Start scanner</button>
+      <button id="stopScanner" class="g-btn g-btn-ghost">Stop</button>
+    </div>
+    <p class="g-hint">Camera scan uses jsQR. If camera or jsQR isn’t available, this will just quietly fail.</p>
+  </div>
+</div>
+
