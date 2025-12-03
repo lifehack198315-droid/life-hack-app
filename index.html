@@ -563,6 +563,28 @@
       </section>
 
     </main>
+    <!-- ===== SMART SCANNER SCREEN ===== -->
+<section class="screen" data-screen="scanner">
+  <h1 class="screen-title">Smart Scanner</h1>
+
+  <article class="card">
+    <h2>Scan QR / Barcode</h2>
+    <video id="scanVideo" class="scan-video" playsinline></video>
+    <div class="scan-actions">
+      <button class="btn-primary" id="btnStartScan">Start scan</button>
+      <button class="btn-secondary" id="btnStopScan">Stop</button>
+    </div>
+    <p class="scan-status" id="scanStatus">Ready to scan.</p>
+  </article>
+
+  <article class="card">
+    <h2>Last Scan · Better You Check</h2>
+    <div id="scanResult" class="scan-result">
+      <p>No scans yet.</p>
+    </div>
+  </article>
+</section>
+
 
     <!-- ========= BOTTOM NAV ========= -->
     <nav class="bottom-nav">
