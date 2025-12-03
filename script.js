@@ -1,369 +1,362 @@
-Life Hack OS – UI Wiring (UPGRADED with persistence)
-
-// Helpers to safely use localStorage
-function loadNumber(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
-    if (value === null) return fallback;
-    const num = Number(value);
-    return Number.isNaN(num) ? fallback : num;
-  } catch (e) {
-    return fallback;
-  }
-}
-
-function saveNumber(key, value) {
-  try {
-    localStorage.setItem(key, String(value));
-  } catch (e) {
-    // ignore if storage not available
-  }
-}
+// Life Hack OS - Frontend Logic
+// Makes buttons actually DO things.
+// Uses localStorage so data sticks when you refresh.
 
 document.addEventListener("DOMContentLoaded", () => {
-  // ================== BOTTOM NAV: SCREEN SWITCHING ==================
-  const screens = document.querySelectorAll(".screen");
-  const navItems = document.querySelectorAll(".nav-item");
+  // ========= HELPER: SAFE QUERY =========
+  const $ = (selector) => document.querySelector(selector);
 
-  navItems.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const target = btn.getAttribute("data-screen-target");
+  // ========= WATER TRACKER =========
+  const waterInput = $("#waterInput");          // <input type="number">
+  const btnLogWater = $("#btnLogWater");        // button: "Log Water"
+  const waterTotalEl = $("#waterTotal");        // span/div to show total
+  const waterHistoryEl = $("#waterHistory");    // optional: list of entries
 
-      screens.forEach((s) => {
-        s.classList.toggle("screen-active", s.dataset.screen === target);
-      });
+  let waterTotal = Number(localStorage.getItem("lh_waterTotal") || 0);
 
-      navItems.forEach((n) => n.classList.remove("nav-item-active"));
-      btn.classList.add("nav-item-active");
-    });
-  });
-
-  // ================== HEALTH TABS ==================
-  const tabs = document.querySelectorAll(".tab");
-  const tabContents = document.querySelectorAll(".tab-content");
-
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const target = tab.getAttribute("data-tab");
-
-      tabs.forEach((t) => t.classList.remove("tab-active"));
-      tab.classList.add("tab-active");
-
-      tabContents.forEach((content) => {
-        const isActive = content.getAttribute("data-tab-content") === target;
-        content.classList.toggle("tab-content-active", isActive);
-      });
-    });
-  });
-
-  // ================== ASK AI PANEL OPEN/CLOSE ==================
-  const askAiBtn = document.getElementById("askAiBtn");
-  const askAiPanel = document.getElementById("askAiPanel");
-  const askAiClose = document.getElementById("askAiClose");
-
-  if (askAiBtn && askAiPanel && askAiClose) {
-    askAiBtn.addEventListener("click", () => {
-      askAiPanel.classList.add("ask-ai-open");
-    });
-
-    askAiClose.addEventListener("click", () => {
-      askAiPanel.classList.remove("ask-ai-open");
-    });
-  }
-
-  // ================== ASK AI – TONE TOGGLE (PERSISTENT) ==================
-  let currentTone = (function () {
-    try {
-      return localStorage.getItem("lh_currentTone") || "coach";
-    } catch (e) {
-      return "coach";
-    }
-  })();
-
-  const toneButtons = document.querySelectorAll(".tone-btn");
-
-  // Initial tone button state
-  toneButtons.forEach((btn) => {
-    const tone = btn.getAttribute("data-tone") || "coach";
-    if (tone === currentTone) {
-      btn.classList.add("tone-active");
-    } else {
-      btn.classList.remove("tone-active");
-    }
-  });
-
-  toneButtons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      toneButtons.forEach((b) => b.classList.remove("tone-active"));
-      btn.classList.add("tone-active");
-      currentTone = btn.getAttribute("data-tone") || "coach";
-      try {
-        localStorage.setItem("lh_currentTone", currentTone);
-      } catch (e) {
-        // ignore
-      }
-    });
-  });
-
-  // ================== ASK AI – SIMPLE BRAIN + FREE QUESTION COUNTER ==================
-  const messagesContainer = document.getElementById("askAiMessages");
-  const askAiInput = document.getElementById("askAiInput");
-  const askAiSend = document.getElementById("askAiSend");
-  const askAiFooter = document.getElementById("askAiFooter");
-
-  let freeQuestions = loadNumber("lh_freeQuestions", 3);
-
-  function updateFreeQuestionsFooter() {
-    if (!askAiFooter) return;
-    if (freeQuestions > 0) {
-      askAiFooter.textContent = `${freeQuestions} free questions left · Upgrade for unlimited`;
-    } else {
-      askAiFooter.textContent =
-        "Free questions used · Upgrade for unlimited coaching (future feature).";
+  function renderWater() {
+    if (waterTotalEl) {
+      waterTotalEl.textContent = waterTotal + " oz";
     }
   }
 
-  updateFreeQuestionsFooter();
+  renderWater();
 
-   function buildCoachReply(question) {
-    const q = (question || "").toLowerCase();
-
-    // If kidney mode is on, we bias almost EVERYTHING toward kidney protection
-    if (kidneyModeOn) {
-      if (q.includes("eat") || q.includes("food") || q.includes("diet")) {
-        return "Kidney-first plan: low sodium, simple ingredients. Think baked or grilled protein, steamed or frozen veggies without heavy sauce, and rice/beans with light seasoning. Avoid canned soups, instant noodles, and salty snacks. Always run big changes past your kidney doctor.";
+  if (btnLogWater && waterInput) {
+    btnLogWater.addEventListener("click", () => {
+      const val = Number(waterInput.value);
+      if (!val || val <= 0) {
+        alert("Enter a positive number of ounces first.");
+        return;
       }
 
-      if (q.includes("water") || q.includes("drink") || q.includes("hydration")) {
-        return "Hydration matters, but the exact amount depends on your kidneys and heart. Follow the daily fluid limit your doctor gave you. Use this app to stay close to that number—not to randomly chug water.";
+      waterTotal += val;
+      localStorage.setItem("lh_waterTotal", waterTotal.toString());
+      renderWater();
+
+      if (waterHistoryEl) {
+        const li = document.createElement("li");
+        const now = new Date();
+        li.textContent = `${val} oz at ${now.toLocaleTimeString()}`;
+        waterHistoryEl.prepend(li);
       }
 
-      if (q.includes("sodium") || q.includes("salt")) {
-        return "Your kidneys LOVE low-sodium days. Keep most meals under heavy salt. Choose fresh or frozen over canned, skip the extra soy sauce and seasoning packets, and taste your food before you reach for the salt shaker.";
+      waterInput.value = "";
+    });
+  }
+
+  // ========= EXPENSE TRACKER =========
+  const expenseNameInput = $("#expenseName");   // text
+  const expenseAmountInput = $("#expenseAmount"); // number
+  const btnAddExpense = $("#btnAddExpense");
+  const expenseListEl = $("#expenseList");      // <ul> or <div>
+  const expenseTotalEl = $("#expenseTotal");    // span/div
+
+  let expenses = JSON.parse(localStorage.getItem("lh_expenses") || "[]");
+
+  function renderExpenses() {
+    if (!expenseListEl) return;
+
+    expenseListEl.innerHTML = "";
+    let total = 0;
+
+    expenses.forEach((exp, index) => {
+      total += exp.amount;
+
+      const li = document.createElement("li");
+      li.className = "expense-item";
+
+      const label = document.createElement("span");
+      label.textContent = `${exp.name} - $${exp.amount.toFixed(2)}`;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "✕";
+      delBtn.className = "btn-small";
+      delBtn.addEventListener("click", () => {
+        expenses.splice(index, 1);
+        localStorage.setItem("lh_expenses", JSON.stringify(expenses));
+        renderExpenses();
+      });
+
+      li.appendChild(label);
+      li.appendChild(delBtn);
+      expenseListEl.appendChild(li);
+    });
+
+    if (expenseTotalEl) {
+      expenseTotalEl.textContent = "$" + total.toFixed(2);
+    }
+  }
+
+  renderExpenses();
+
+  if (btnAddExpense && expenseNameInput && expenseAmountInput) {
+    btnAddExpense.addEventListener("click", () => {
+      const name = expenseNameInput.value.trim() || "Unnamed";
+      const amount = Number(expenseAmountInput.value);
+
+      if (!amount || amount <= 0) {
+        alert("Enter a positive dollar amount.");
+        return;
       }
+
+      expenses.push({ name, amount });
+      localStorage.setItem("lh_expenses", JSON.stringify(expenses));
+      renderExpenses();
+
+      expenseNameInput.value = "";
+      expenseAmountInput.value = "";
+    });
+  }
+
+  // ========= GROCERY LIST =========
+  const groceryInput = $("#groceryItem");       // text input
+  const btnAddGrocery = $("#btnAddGrocery");
+  const groceryListEl = $("#groceryList");      // <ul>
+
+  let groceries = JSON.parse(localStorage.getItem("lh_groceries") || "[]");
+
+  function renderGroceries() {
+    if (!groceryListEl) return;
+    groceryListEl.innerHTML = "";
+
+    groceries.forEach((item, index) => {
+      const li = document.createElement("li");
+      li.className = "grocery-item";
+
+      const label = document.createElement("span");
+      label.textContent = item;
+
+      const doneBtn = document.createElement("button");
+      doneBtn.textContent = "✔";
+      doneBtn.className = "btn-small";
+      doneBtn.addEventListener("click", () => {
+        groceries.splice(index, 1);
+        localStorage.setItem("lh_groceries", JSON.stringify(groceries));
+        renderGroceries();
+      });
+
+      li.appendChild(label);
+      li.appendChild(doneBtn);
+      groceryListEl.appendChild(li);
+    });
+  }
+
+  renderGroceries();
+
+  if (btnAddGrocery && groceryInput) {
+    btnAddGrocery.addEventListener("click", () => {
+      const text = groceryInput.value.trim();
+      if (!text) {
+        alert("Type something for your grocery list.");
+        return;
+      }
+
+      groceries.push(text);
+      localStorage.setItem("lh_groceries", JSON.stringify(groceries));
+      renderGroceries();
+
+      groceryInput.value = "";
+    });
+  }
+
+  // ========= REMINDERS =========
+  const reminderInput = $("#reminderText");     // text
+  const reminderTimeInput = $("#reminderTime"); // time (optional)
+  const btnAddReminder = $("#btnAddReminder");
+  const reminderListEl = $("#reminderList");
+
+  let reminders = JSON.parse(localStorage.getItem("lh_reminders") || "[]");
+
+  function renderReminders() {
+    if (!reminderListEl) return;
+    reminderListEl.innerHTML = "";
+
+    reminders.forEach((rem, index) => {
+      const li = document.createElement("li");
+      li.className = "reminder-item";
+
+      const label = document.createElement("span");
+      label.textContent = rem.time
+        ? `${rem.text} at ${rem.time}`
+        : rem.text;
+
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "✕";
+      delBtn.className = "btn-small";
+      delBtn.addEventListener("click", () => {
+        reminders.splice(index, 1);
+        localStorage.setItem("lh_reminders", JSON.stringify(reminders));
+        renderReminders();
+      });
+
+      li.appendChild(label);
+      li.appendChild(delBtn);
+      reminderListEl.appendChild(li);
+    });
+  }
+
+  renderReminders();
+
+  if (btnAddReminder && reminderInput) {
+    btnAddReminder.addEventListener("click", () => {
+      const text = reminderInput.value.trim();
+      const time = reminderTimeInput ? reminderTimeInput.value : "";
+
+      if (!text) {
+        alert("Reminder text can’t be empty.");
+        return;
+      }
+
+      reminders.push({ text, time });
+      localStorage.setItem("lh_reminders", JSON.stringify(reminders));
+      renderReminders();
+
+      reminderInput.value = "";
+      if (reminderTimeInput) reminderTimeInput.value = "";
+    });
+  }
+
+  // ========= MOOD CHECK / MENTAL HEALTH =========
+  // Simple 1–10 scale: #moodSlider, button #btnCheckMood, and #moodResult
+  const moodSlider = $("#moodSlider");           // <input type="range" min="1" max="10">
+  const btnCheckMood = $("#btnCheckMood");
+  const moodResultEl = $("#moodResult");
+
+  if (btnCheckMood && moodSlider && moodResultEl) {
+    btnCheckMood.addEventListener("click", () => {
+      const score = Number(moodSlider.value || 5);
+      let message = "";
+      let extra = "";
+
+      if (score >= 8) {
+        message = "🔥 You’re in a strong place today.";
+        extra = "Lock this in with one small win: finish a task you’ve been putting off.";
+      } else if (score >= 5) {
+        message = "😐 You’re okay, but we can level up.";
+        extra = "Pick ONE thing you can control today and crush it. Small steps count.";
+      } else if (score >= 3) {
+        message = "⚠️ You’re having a rough one, but you are not alone.";
+        extra =
+          "Text a trusted person, drink some water, and do one tiny act of self-care. You deserve that.";
+      } else {
+        message = "🚨 This feels very heavy.";
+        extra =
+          "If you’re thinking about hurting yourself, please reach out for real-world help right now:\n" +
+          "• 988 Suicide & Crisis Lifeline (call or text 988 in the U.S.)\n" +
+          "• Or go to the nearest ER or emergency service.\n\nYou matter more than you realize.";
+      }
+
+      moodResultEl.innerHTML = `
+        <strong>Mood score: ${score}/10</strong><br>
+        ${message}<br><small>${extra.replace(/\n/g, "<br>")}</small>
+      `;
+    });
+  }
+
+  // ========= “CHECK WEATHER FOR THE WEEK” BUTTON =========
+  // We can’t call real APIs without a key, so we’ll simulate a card update.
+  const btnCheckWeather = $("#btnCheckWeather");  // button
+  const weatherOutputEl = $("#weatherOutput");    // div/section to show fake forecast
+
+  if (btnCheckWeather && weatherOutputEl) {
+    btnCheckWeather.addEventListener("click", () => {
+      const fakeForecast = [
+        "Mon: Partly cloudy · Great for a walk",
+        "Tue: Light rain · Pack an umbrella",
+        "Wed: Sunny · Hydrate + sunscreen",
+        "Thu: Cloudy · Perfect for errands",
+        "Fri: Storm chances · Drive carefully",
+        "Sat: Warm · Good day for movement",
+        "Sun: Chill · Rest + reset"
+      ];
+
+      weatherOutputEl.innerHTML = "";
+      const ul = document.createElement("ul");
+      fakeForecast.forEach((line) => {
+        const li = document.createElement("li");
+        li.textContent = line;
+        ul.appendChild(li);
+      });
+      weatherOutputEl.appendChild(ul);
+    });
+  }
+
+  // ========= ASK AI (OFFLINE, MOTIVATIONAL) =========
+  const askAiInput = $("#askAiInput");        // textarea or input
+  const btnAskAi = $("#btnAskAi");           // button
+  const askAiOutput = $("#askAiOutput");     // div for answer
+
+  function generateCoachingReply(question) {
+    const q = question.toLowerCase();
+
+    if (q.includes("money") || q.includes("debt") || q.includes("bills")) {
+      return "Money is stressful, but you’re not stuck. List your bills, sort them by due date, and attack the smallest one first. Build momentum, not perfection.";
     }
 
-    // Kidney-specific question even if not explicit “mode”
-    if (q.includes("kidney")) {
-      return "Kidney mode ON: low sodium, controlled fluids, movement, and careful with meds. You win by being boring and consistent. Build a cheap rotation: rice/beans, grilled or baked chicken, steamed veggies, and water or unsweet tea. Confirm details with your kidney doctor or dietitian.";
-    }
-
-    if (q.includes("money") || q.includes("spend") || q.includes("broke") || q.includes("budget")) {
-      return "Money talk: for the next 7 days, track EVERY dollar. No guessing. Once you see where it goes, we cut one expensive habit and move that money to bills, meds, or savings.";
-    }
-
-    if (q.includes("weight") || q.includes("fat") || q.includes("lose")) {
-      return "Weight loss is consistency, not torture. Pick ONE: daily step goal or daily sugar cap. Hit that for 14 days straight. We build from there.";
-    }
-
-    if (q.includes("style") || q.includes("clothes") || q.includes("outfit")) {
-      return "Style rule: clean, fitted, and simple beats loud and sloppy. Dark pants, clean sneakers, sharp jacket or top. You’ll look like you have your life together even on off days.";
-    }
-
-    if (q.includes("tired") || q.includes("sleep")) {
-      return "Sleep is kidney-support too. Better rest helps blood pressure and sugar control. Pick a shutdown time tonight and honor it like a contract.";
+    if (q.includes("health") || q.includes("diet") || q.includes("exercise")) {
+      return "Your body doesn’t need perfection, it needs consistency. Today, do one healthy meal and a 10–15 minute walk. That’s it. Stack wins from there.";
     }
 
     if (q.includes("motivation") || q.includes("lazy") || q.includes("stuck")) {
-      return "Motivation comes AFTER action. Set a 10-minute timer and do one small task—walk, drink water, prep a low-sodium meal, or pay a bill. When the timer ends, you’re allowed to stop. Most days, you won’t.";
+      return "You don’t need motivation. You need motion. Set a 5-minute timer, start the task, and stop when the timer ends. 5 minutes beats 0 minutes every time.";
     }
 
-    // Default based on tone
-    if (currentTone === "gentle") {
-      return "Take a breath. You don’t have to fix everything today. Pick one small kidney-safe move: drink within your fluid limit, pick a low-sodium meal, or take a short walk. Then give yourself credit for it.";
+    if (q.includes("credit") || q.includes("score") || q.includes("collection")) {
+      return "Start with your reports: pull them from annualcreditreport.com, highlight negatives, and tackle one item per week. Slow progress is still progress.";
     }
 
-    return "You already know the next right step. Your job is to DO it, not overthink it. Make one kidney-safe decision in the next 30 minutes—less salt, better meal, small walk—before you open social media again.";
+    if (q.includes("relationship") || q.includes("family") || q.includes("friend")) {
+      return "Be honest and specific about how you feel. One calm conversation beats weeks of silent resentment. Lead with ‘I feel…’ instead of ‘You never…’.";
+    }
+
+    // Default catch-all
+    return "You’re capable of more than you’re giving yourself credit for. Break the problem into the tiniest possible next step and do just that. Then celebrate it.";
   }
 
-  function appendMessage(text, from = "ai") {
-    if (!messagesContainer) return;
-    const msg = document.createElement("div");
-    msg.classList.add("msg", from === "user" ? "msg-user" : "msg-ai");
-    msg.innerHTML = `<p>${text}</p>`;
-    messagesContainer.appendChild(msg);
-    messagesContainer.scrollTop = messagesContainer.scrollHeight;
-  }
-
-  function sendQuestion() {
-    if (!askAiInput || !askAiSend) return;
-    const question = askAiInput.value.trim();
-    if (!question) return;
-
-    if (freeQuestions <= 0) {
-      appendMessage(
-        "Free limit hit. Imagine this is where the upgrade paywall kicks in. For now, reset your brain by taking one small action from our last answer.",
-        "ai"
-      );
-      return;
-    }
-
-    appendMessage(question, "user");
-    const reply = buildCoachReply(question);
-    appendMessage(reply, "ai");
-
-    freeQuestions -= 1;
-    saveNumber("lh_freeQuestions", freeQuestions);
-    updateFreeQuestionsFooter();
-
-    askAiInput.value = "";
-  }
-
-  if (askAiSend && askAiInput) {
-    askAiSend.addEventListener("click", sendQuestion);
-    askAiInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        sendQuestion();
-      }
-    });
-  }
-
-  // ================== HYDRATION LOGIC (PERSISTENT) ==================
-  const hydrationText = document.getElementById("hydrationText");
-  const hydrationFill = document.getElementById("hydrationFill");
-  const hydrationNote = document.getElementById("hydrationNote");
-  const todayWaterText = document.getElementById("todayWaterText");
-  const btnLogGlass = document.getElementById("btnLogGlass");
-  const btnLogCustom = document.getElementById("btnLogCustom");
-
-  let waterCurrent = loadNumber("lh_waterCurrent", 5);
-  const waterGoal = 8;
-
-  function updateHydrationUI() {
-    if (hydrationText) {
-      hydrationText.textContent = `${waterCurrent} / ${waterGoal} glasses`;
-    }
-    if (todayWaterText) {
-      todayWaterText.textContent = `${waterCurrent} / ${waterGoal} glasses`;
-    }
-    if (hydrationFill) {
-      const pct = Math.max(0, Math.min(100, (waterCurrent / waterGoal) * 100));
-      hydrationFill.style.height = `${pct}%`;
-    }
-    if (hydrationNote) {
-      const diff = waterGoal - waterCurrent;
-      if (diff > 0) {
-        hydrationNote.textContent = `You’re ${diff} glass${diff === 1 ? "" : "es"} short of your goal. Take one now.`;
-      } else {
-        hydrationNote.textContent = "Hydration goal hit. Maintain it and your energy will thank you.";
-      }
-    }
-    saveNumber("lh_waterCurrent", waterCurrent);
-  }
-
-  updateHydrationUI();
-
-  if (btnLogGlass) {
-    btnLogGlass.addEventListener("click", () => {
-      waterCurrent = Math.min(waterGoal + 4, waterCurrent + 1); // allow a bit above goal
-      updateHydrationUI();
-    });
-  }
-
-  if (btnLogCustom) {
-    btnLogCustom.addEventListener("click", () => {
-      const input = prompt("How many glasses of water have you had today?");
-      if (!input) return;
-      const value = Number(input);
-      if (Number.isNaN(value) || value < 0) {
-        alert("Enter a valid number.");
+  if (btnAskAi && askAiInput && askAiOutput) {
+    btnAskAi.addEventListener("click", () => {
+      const text = askAiInput.value.trim();
+      if (!text) {
+        alert("Type a question or problem first.");
         return;
       }
-      waterCurrent = value;
-      updateHydrationUI();
+
+      const reply = generateCoachingReply(text);
+
+      askAiOutput.innerHTML = `
+        <p><strong>Your question:</strong> ${text}</p>
+        <p><strong>Coach:</strong> ${reply}</p>
+      `;
+
+      askAiInput.value = "";
     });
   }
 
-  // Quick action on Today: "+ Log water" etc.
-  const todayQuickActions = document.querySelectorAll(".quick-actions-today .chip");
-  todayQuickActions.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const text = chip.textContent.toLowerCase();
-      if (text.includes("log water")) {
-        waterCurrent = Math.min(waterGoal + 4, waterCurrent + 1);
-        updateHydrationUI();
-      } else if (text.includes("check weather")) {
-        alert("Future feature: real-time weather API and outfit picker. For now, assume Texas: hydrate and dress in layers.");
-      } else if (text.includes("scan outfit")) {
-        alert("Future feature: scan clothes with camera and build your closet. For now, rock that navy jacket + pinstripe shirt.");
-      } else if (text.includes("add expense")) {
-        alert("Jump to the Money tab to track spending. Quick-add buttons there simulate expenses right now.");
-      }
+  // ========= OPTIONAL: SCREEN TABS (if you have sidebar buttons) =========
+  // Use data-screen on nav buttons and [data-screen-id] on sections.
+  const screenButtons = document.querySelectorAll("[data-screen]");
+  const screens = document.querySelectorAll("[data-screen-id]");
+
+  function showScreen(id) {
+    screens.forEach((section) => {
+      section.classList.toggle("is-active", section.dataset.screenId === id);
     });
-  });
 
-  // ================== MONEY – QUICK ADD (PERSISTENT) ==================
-  const moneySpentEl = document.getElementById("moneySpent");
-  const moneyDiffEl = document.getElementById("moneyDiff");
-  const moneyQuickChips = document.querySelectorAll(".quick-actions-money .chip");
-
-  let moneySpent = loadNumber("lh_moneySpent", 312);
-  let moneyVsLastWeek = loadNumber("lh_moneyVsLastWeek", 34);
-
-  function updateMoneyUI() {
-    if (moneySpentEl) {
-      moneySpentEl.textContent = `$${moneySpent.toFixed(0)}`;
-    }
-    if (moneyDiffEl) {
-      moneyDiffEl.textContent = `+ $${moneyVsLastWeek.toFixed(0)}`;
-    }
-    saveNumber("lh_moneySpent", moneySpent);
-    saveNumber("lh_moneyVsLastWeek", moneyVsLastWeek);
+    screenButtons.forEach((btn) => {
+      btn.classList.toggle("is-active", btn.dataset.screen === id);
+    });
   }
 
-  updateMoneyUI();
-
-  moneyQuickChips.forEach((chip) => {
-    chip.addEventListener("click", () => {
-      const amount = Number(chip.getAttribute("data-amount")) || 0;
-      if (amount <= 0) return;
-      moneySpent += amount;
-      moneyVsLastWeek += amount * 0.5; // fake comparison
-      updateMoneyUI();
+  if (screenButtons.length && screens.length) {
+    screenButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const id = btn.dataset.screen;
+        showScreen(id);
+      });
     });
-  });
 
-  // ================== COACH PEP TALK BUTTON ==================
-  const btnPepTalk = document.getElementById("btnPepTalk");
-  const coachQuote = document.getElementById("coachQuote");
-
-  const pepTalks = [
-    "This time next year, your future self will either thank you or blame you. Today decides which one it is.",
-    "Drink water, move 10 minutes, and spend with intention. Those three alone will change your whole life.",
-    "You’ve survived every bad day so far. Now it’s time to build days you actually enjoy living.",
-    "You’re not behind—you’re just starting your serious chapter. Act like it.",
-    "No more ‘all or nothing’. Today is ‘something or nothing’. Choose something."
-  ];
-
-  if (btnPepTalk && coachQuote) {
-    btnPepTalk.addEventListener("click", () => {
-      const random = pepTalks[Math.floor(Math.random() * pepTalks.length)];
-      coachQuote.textContent = random;
-    });
-    // --- CARD CLICK HANDLERS ---
-document.getElementById("card-water")?.addEventListener("click", () => {
-  openScreen("water-screen");
-});
-
-document.getElementById("card-meal")?.addEventListener("click", () => {
-  openScreen("meal-screen");
-});
-
-document.getElementById("card-receipt")?.addEventListener("click", () => {
-  openScreen("receipt-screen");
-});
-
-document.getElementById("card-weather")?.addEventListener("click", () => {
-  openScreen("weather-screen");
-});
-
-// ---- SIMPLE SCREEN SWITCHER ----
-function openScreen(screenId) {
-  document.querySelectorAll(".screen").forEach((scr) => scr.classList.add("hidden"));
-  document.getElementById(screenId).classList.remove("hidden");
-}
+    // Default screen: first one
+    showScreen(screenButtons[0].dataset.screen);
   }
-
-  console.log("Life Hack OS wiring script (UPGRADED) loaded.");
 });
