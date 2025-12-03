@@ -1,4 +1,4 @@
-// Life Hack OS – UI Wiring (UPGRADED with persistence)
+Life Hack OS – UI Wiring (UPGRADED with persistence)
 
 // Helpers to safely use localStorage
 function loadNumber(key, fallback) {
