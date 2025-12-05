@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lifehack OS | One app. Entire life.</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="style.css" />
+  <script defer src="script.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <!-- HEADER -->
+    <header class="app-header">
+      <h1 class="app-title">Lifehack OS</h1>
+      <p class="app-subtitle">One app. Your entire life, in one place.</p>
+    </header>
+
+    <!-- MAIN SCREENS -->
+    <main class="app-main">
+      <!-- ================= HOME SCREEN (PAGE 1) ================= -->
+      <section id="screen-home" class="screen active">
+        <!-- Title pill -->
+        <button class="pill pill-title" disabled>
+          <span class="pill-main-text">Lifehack OS</span>
+          <span class="pill-sub-text">One app. Entire life.</span>
+        </button>
+
+        <!-- Function pills -->
+        <div class="pill-column">
+          <button class="pill" data-action="log-water">
+            Log your water
+          </button>
+
+          <button class="pill" data-action="log-meal">
+            Log meal or scan
+          </button>
+
+          <button class="pill" data-action="grocery-list">
+            Check grocery list
+          </button>
+
+          <button class="pill" data-action="weather">
+            Check weather
+          </button>
+        </div>
+
+        <!-- Energy & Safety card -->
+        <div id="energySafetyBtn" class="energy-card">
+          <div class="energy-card-header">
+            <h2>Energy &amp; Safety</h2>
+            <span class="chip">Tap for Page 2</span>
+          </div>
+          <p class="energy-card-text">
+            Quick check on your energy, safety, and environment.
+            UV · Temperature · Weather · Health Ask AI.
+          </p>
+        </div>
+      </section>
+
+      <!-- ============== ENERGY & SAFETY SCREEN (PAGE 2) ============== -->
+      <section id="screen-safety" class="screen">
+        <header class="screen-header">
+          <button class="back-btn" data-target-screen="screen-home">&larr; Home</button>
+          <h2>Energy &amp; Safety Dashboard</h2>
+          <p class="screen-tagline">
+            Know your environment. Make safer, smarter choices.
+          </p>
+        </header>
+
+        <div class="pill-column">
+          <button class="pill" id="pill-uv">
+            UV Index (U-7)
+            <span class="pill-small-text">Tap to update</span>
+          </button>
+
+          <button class="pill" id="pill-temp">
+            Temperature &amp; Day
+            <span class="pill-small-text">Tap to refresh</span>
+          </button>
+
+          <button class="pill" id="pill-weather">
+            Detailed Weather Snapshot
+            <span class="pill-small-text">Tap to update</span>
+          </button>
+
+          <button class="pill pill-accent" id="pill-ask-ai">
+            Ask AI · Healthy You
+            <span class="pill-small-text">
+              Ask about nutrition, sexual health, mental health, or general wellness.
+            </span>
+          </button>
+        </div>
+
+        <section class="info-panel">
+          <h3>Energy &amp; Safety Summary</h3>
+          <p id="safetySummary">
+            Tap a pill above to simulate UV, temperature, and weather updates.
+            We’ll wire this into live data later. For now, this is your preview dashboard.
+          </p>
+        </section>
+
+        <section class="cta-panel">
+          <p class="cta-text">
+            Want to check in on your mental health?
+          </p>
+          <button class="pill pill-mental" data-target-screen="screen-mental">
+            Go to Mental Health Check (Page 3)
+          </button>
+        </section>
+      </section>
+
+      <!-- ============== MENTAL HEALTH SCREEN (PAGE 3) ============== -->
+      <section id="screen-mental" class="screen">
+        <header class="screen-header">
+          <button class="back-btn" data-target-screen="screen-safety">&larr; Back to Safety</button>
+          <h2>Mental Health Check-In</h2>
+          <p class="screen-tagline">
+            This is not a diagnosis. It’s a quick check to help you notice how you're feeling.
+          </p>
+        </header>
+
+        <form id="mentalForm" class="mental-form">
+          <p class="form-intro">
+            Over the last few days, how often have you experienced the following?
+          </p>
+
+          <div class="question">
+            <label>1. Feeling down, depressed, or hopeless?</label>
+            <div class="options">
+              <label><input type="radio" name="q1" value="0" checked /> Not at all</label>
+              <label><input type="radio" name="q1" value="1" /> Several days</label>
+              <label><input type="radio" name="q1" value="2" /> More than half the days</label>
+              <label><input type="radio" name="q1" value="3" /> Nearly every day</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>2. Little interest or pleasure in doing things?</label>
+            <div class="options">
+              <label><input type="radio" name="q2" value="0" checked /> Not at all</label>
+              <label><input type="radio" name="q2" value="1" /> Several days</label>
+              <label><input type="radio" name="q2" value="2" /> More than half the days</label>
+              <label><input type="radio" name="q2" value="3" /> Nearly every day</label>
+            </div>
+          </div>
+
+          <div class="question">
+            <label>3. Feeling nervous, anxious, or on edge?</label>
+            <div class="options">
+              <label><input type="radio" name="q3" value="0" checked /> Not at all</label>
+              <label><input type="radio" name="q3" value="1" /> Several days</label>
+              <label><input type="radio" name="q3" value="2" /> More than half the days</label>
+              <label><input type="radio" name="q3" value="3" /> Nearly every day</label>
+            </div>
+          </div>
+
+          <button type="submit" class="pill pill-submit">
+            See my check-in summary
+          </button>
+        </form>
+
+        <section id="mentalResult" class="mental-result" aria-live="polite"></section>
+
+        <section class="safety-note">
+          <h3>If you're really struggling</h3>
+          <p>
+            This app is for support and awareness, not emergency care.  
+            If you ever feel like you might hurt yourself, or you feel completely overwhelmed:
+          </p>
+          <ul>
+            <li>Talk to someone you trust, right away.</li>
+            <li>Reach out to a mental health professional or your doctor.</li>
+            <li>If you're in the United States, you can call or text <strong>988</strong> for 24/7 support.</li>
+            <li>In any country, you can contact your local emergency number if you are in immediate danger.</li>
+          </ul>
+        </section>
+      </section>
+    </main>
+  </div>
+</body>
+</html>
